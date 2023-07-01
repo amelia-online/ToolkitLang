@@ -1,13 +1,23 @@
-set #out stdout
-set #in stdin
+    This file is part of the Toolkit interpreter.
+    Copyright (C) 2023 Amelia Johnson
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published
+    by the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
 
 ~start
     :> x int
     <: x
     <: "Hello, world!"
 
-    set y [ 1 2 3 ]
-    iter y as i
-        <: i
+    set list [ 1 2 3 ]
+    iter list as i
+        <: i + 1
     end
 end

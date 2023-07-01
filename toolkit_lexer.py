@@ -15,6 +15,8 @@ from enum import Enum
     GNU Affero General Public License for more details.
 """
 
+OPERATORS = {"+", "-", "*", "/", "%", "&", "|"}
+
 
 class TokenType(Enum):
     String = 1,
@@ -36,13 +38,22 @@ class TokenType(Enum):
     As = 17,
     End = 18,
     Type = 19,
+    Space = 20,
+    RParen = 21,
+    LParen = 22,
+    RBracket = 23,
+    LBracket = 24,
+
+
+def unreachable():
+    assert False, "This code is unreachable"
 
 
 class Token:
     def __init__(self):
         self.pos = 1
         self.line = 1
-        self.content = ""
+        self.content: str = ""
 
     def __repr__(self):
         return f"{self.content} : {self.line} - {self.pos}"
@@ -58,12 +69,115 @@ class Token:
         self.content = ""
 
 
+def process_str(string) -> str:
+    index = 1
+    result = ""
+    while index < len(string) - 1:
+        char = string[index]
+        match char:
+
+            case "\\":
+                index += 1
+                match string[index]:
+
+                    case "\"":
+                        result += "\""
+
+                    case "\\":
+                        result += "\\"
+
+                    case "\'":
+                        result += '\''
+
+                    case "t":
+                        result += '\t'
+
+                    case "n":
+                        result += '\n'
+
+                    case _:
+                        print(f"ERROR: Unknown string escape encountered: '{string[index]}'")
+
+            case _:
+                result += char
+        index += 1
+    return result
+
+
+def is_num(string):
+    try:
+        _ = float(string)
+        return True
+    except ValueError:
+        return False
+
+
+def match_operator(string):
+    match string:
+        case '+':
+            return TokenType.Add
+
+        case '-':
+            return TokenType.Minus
+
+        case '*':
+            return TokenType.Mult
+
+        case "/":
+            return TokenType.Divide
+
+        case "%":
+            return TokenType.Mod
+
+        case "|":
+            return TokenType.Or
+
+        case "&":
+            return TokenType.And
+
+        case "**":
+            return TokenType.Pow
+
+        case _:
+            unreachable()
+
+
 class Lexer:
     def __init__(self):
         self.tokens = []
 
-    def finalize(self) -> list[(Token, TokenType)]:
-        pass
+    def finalize(self):
+        categorized_tokens = []
+
+        def categorize(old_token, ttype, lst=None):
+            if lst is None:
+                lst = categorized_tokens
+            lst.append((old_token, ttype))
+
+        for token in self.tokens:
+            if token.content.startswith("\"") and token.content.endswith("\""):
+                categorize(token, TokenType.String)
+            elif token.content in OPERATORS:
+                categorize(token, match_operator(token.content))
+            elif is_num(token.content):
+                categorize(token, TokenType.Number)
+            elif token.content.startswith("~"):
+                categorize(token, TokenType.Function)
+            elif token.content == "end":
+                categorize(token, TokenType.End)
+            elif token.content == "<:":
+                categorize(token, TokenType.Out)
+            elif token.content == ":>":
+                categorize(token, TokenType.In)
+            elif token.content == "set":
+                categorize(token, TokenType.Set)
+            elif token.content == "as":
+                categorize(token, TokenType.As)
+            elif token.content == "iter":
+                categorize(token, TokenType.Iter)
+            else:
+                categorize(token, TokenType.Ident)
+        self.tokens = categorized_tokens
 
     def as_lines(self):
         lines = []

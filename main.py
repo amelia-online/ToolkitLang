@@ -19,10 +19,10 @@ from toolkit_lexer import Lexer
 def main():
     lexer = Lexer()
     lexer.lex("./text.txt")
-    lines = lexer.as_lines()
+    lexer.finalize()
 
-    for line in lines:
-        print(line)
+    for token in lexer.tokens:
+        print(token)
 
 
 if __name__ == '__main__':
