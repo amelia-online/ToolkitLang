@@ -1,4 +1,3 @@
-
 class Token:
     def __init__(self):
         self.pos = 1
@@ -33,8 +32,29 @@ class Lexer:
             token.reset()
 
         with open(source) as file:
+            quote_found = False
+            backslash = False
             for line in file:
                 for char in line:
+
+                    if quote_found:
+                        match char:
+
+                            case '\\':
+                                backslash = True
+
+                            case '\"':
+                                if not backslash:
+                                    quote_found = False
+                                else:
+                                    backslash = False
+
+                            case _:
+                                pass
+
+                        current_token.content += char
+                        continue
+
                     match char:
 
                         case '\n':
@@ -45,6 +65,10 @@ class Lexer:
                         case ' ':
                             consume()
                             current_token.pos += 1
+
+                        case '\"':
+                            quote_found = True
+                            current_token.content += '\"'
 
                         case _:
                             current_token.content += char
