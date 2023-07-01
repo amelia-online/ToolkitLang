@@ -155,6 +155,9 @@ class Lexer:
             lst.append((old_token, ttype))
 
         for token in self.tokens:
+            if token.content == " " or token.content == "":
+                continue
+
             if token.content.startswith("\"") and token.content.endswith("\""):
                 categorize(token, TokenType.String)
             elif token.content in OPERATORS:
@@ -201,6 +204,13 @@ class Lexer:
             lst.append(token.__copy__())
             token.reset()
 
+        def consume_item(item, token=current_token):
+            if not token.content == "":
+                consume()
+                token.pos += 1
+            token.content = item
+            consume()
+
         with open(source) as file:
             quote_found = False
             backslash = False
@@ -234,6 +244,30 @@ class Lexer:
 
                         case ' ':
                             consume()
+                            current_token.pos += 1
+
+                        case '[':
+                            consume_item('[')
+                            current_token.pos += 1
+
+                        case ']':
+                            consume_item(']')
+                            current_token.pos += 1
+
+                        case '(':
+                            consume_item('(')
+                            current_token.pos += 1
+
+                        case ')':
+                            consume_item(')')
+                            current_token.pos += 1
+
+                        case '{':
+                            consume_item('{')
+                            current_token.pos += 1
+
+                        case '}':
+                            consume_item("}")
                             current_token.pos += 1
 
                         case '\"':

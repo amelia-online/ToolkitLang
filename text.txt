@@ -16,7 +16,7 @@
     <: x
     <: "Hello, world!"
 
-    set list [ 1 2 3 ]
+    set list [1 2 3]
     iter list as i
         <: i + 1
     end
