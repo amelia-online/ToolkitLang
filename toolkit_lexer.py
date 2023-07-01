@@ -1,3 +1,43 @@
+from enum import Enum
+
+"""
+    This file is part of the Toolkit interpreter.
+    Copyright (C) 2023 Amelia Johnson
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published
+    by the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+"""
+
+
+class TokenType(Enum):
+    String = 1,
+    Number = 2,
+    Ident = 3,
+    Function = 4,
+    Add = 5,
+    Minus = 6,
+    Divide = 7,
+    Mod = 8,
+    Pow = 9,
+    Mult = 10,
+    And = 11,
+    Or = 12,
+    In = 13,
+    Out = 14,
+    Set = 15,
+    Iter = 16,
+    As = 17,
+    End = 18,
+    Type = 19,
+
+
 class Token:
     def __init__(self):
         self.pos = 1
@@ -21,6 +61,9 @@ class Token:
 class Lexer:
     def __init__(self):
         self.tokens = []
+
+    def finalize(self) -> list[(Token, TokenType)]:
+        pass
 
     def as_lines(self):
         lines = []

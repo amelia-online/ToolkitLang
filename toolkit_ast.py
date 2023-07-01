@@ -1,5 +1,3 @@
-from toolkit_lexer import Lexer
-
 """
     This file is part of the Toolkit interpreter.
     Copyright (C) 2023 Amelia Johnson
@@ -16,14 +14,5 @@ from toolkit_lexer import Lexer
 """
 
 
-def main():
-    lexer = Lexer()
-    lexer.lex("./text.txt")
-    lines = lexer.as_lines()
-
-    for line in lines:
-        print(line)
-
-
-if __name__ == '__main__':
-    main()
+class ASTNode:
+    pass
