@@ -22,6 +22,19 @@ class Lexer:
     def __init__(self):
         self.tokens = []
 
+    def as_lines(self):
+        lines = []
+        current_line = []
+        current_line_num = 1
+        for token in self.tokens:
+            if token.line != current_line_num:
+                current_line_num += 1
+                lines.append(current_line)
+                current_line = [token]
+            else:
+                current_line.append(token)
+        return lines
+
     def lex(self, source):
         current_token = Token()
 
@@ -68,6 +81,7 @@ class Lexer:
 
                         case '\"':
                             quote_found = True
+                            consume()
                             current_token.content += '\"'
 
                         case _:

@@ -1,3 +1,13 @@
-This is a test of lexing. "String one."
-It should be keeping track of line numbers. And
-stuff. "This is a captured string" "This string has a \" in it!"
+set #out stdout
+set #in stdin
+
+~start
+    :> x int
+    <: x
+    <: "Hello, world!"
+
+    set y [ 1 2 3 ]
+    iter y as i
+        <: i
+    end
+end
