@@ -22,3 +22,5 @@
         <: i + 1
     end
 end
+
+<* end of file *>

@@ -245,19 +245,9 @@ class Lexer:
         with open(source) as file:
             quote_found = False
             backslash = False
-            in_comment = False
-            end_comment = False
             throwaway_buffer = []
             for line in file:
                 for char in line:
-
-                    if in_comment:
-                        target = throwaway_buffer
-
-                    if end_comment:
-                        in_comment = False
-                        end_comment = False
-                        target = self.tokens
 
                     if quote_found:
                         match char:
@@ -319,9 +309,10 @@ class Lexer:
 
                         case _:
                             current_token.content += char
-                    if target[-1].content == "<*":
-                        in_comment = True
+
+                    if target[-1].content == "<*" and target == self.tokens:
                         target.pop()
+                        target = throwaway_buffer
                     elif target[-1].content == "*>":
-                        end_comment = True
+                        target = self.tokens
         consume()
