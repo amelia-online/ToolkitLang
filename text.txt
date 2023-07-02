@@ -1,3 +1,4 @@
+    <*
     This file is part of the Toolkit interpreter.
     Copyright (C) 2023 Amelia Johnson
 
@@ -10,7 +11,7 @@
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
-
+    *>
 ~start
     :> x int
     <: x
