@@ -310,9 +310,11 @@ class Lexer:
                         case _:
                             current_token.content += char
 
-                    if target[-1].content == "<*" and target == self.tokens:
-                        target.pop()
-                        target = throwaway_buffer
-                    elif target[-1].content == "*>":
-                        target = self.tokens
+                    if len(target) > 0:
+                        if target[-1].content == "<*" and target == self.tokens:
+                            target.pop()
+                            target = throwaway_buffer
+                        elif target[-1].content == "*>":
+                            target.clear()
+                            target = self.tokens
         consume()
