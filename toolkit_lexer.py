@@ -15,7 +15,8 @@ from enum import Enum
     GNU Affero General Public License for more details.
 """
 
-OPERATORS = {"+", "-", "*", "/", "%", "&", "|"}
+OPERATORS = {"+", "-", "*", "/", "%", "&", "|", ">>", "<<"}
+COMPARISON = {"<", ">", "=", "<=", ">="}
 PARENTHESES = {"(", ")", "[", "]", "{", "}"}
 
 
@@ -46,6 +47,16 @@ class TokenType(Enum):
     LBracket = 24,
     RCurly = 25,
     LCurly = 26,
+    If = 27,
+    LessThan = 28,
+    GreaterThan = 29,
+    LessThanEq = 30,
+    GreaterThanEq = 31,
+    Equal = 32,
+    ShiftL = 33,
+    ShiftR = 34,
+    Is = 35,
+    Return = 36,
 
 
 def unreachable():
@@ -141,6 +152,12 @@ def match_operator(string):
         case "**":
             return TokenType.Pow
 
+        case ">>":
+            return TokenType.ShiftR
+
+        case "<<":
+            return TokenType.ShiftL
+
         case _:
             unreachable()
 
@@ -165,6 +182,28 @@ def match_parentheses(string):
 
         case '}':
             return TokenType.RCurly
+
+        case _:
+            unreachable()
+
+
+def match_comparison(string):
+    match string:
+
+        case ">":
+            return TokenType.GreaterThan
+
+        case "<":
+            return TokenType.LessThan
+
+        case "=":
+            return TokenType.Equal
+
+        case "<=":
+            return TokenType.LessThanEq
+
+        case ">=":
+            return TokenType.GreaterThanEq
 
         case _:
             unreachable()
@@ -202,12 +241,18 @@ class Lexer:
                 categorize(token, TokenType.In)
             elif token.content == "set":
                 categorize(token, TokenType.Set)
+            elif token.content == "is":
+                categorize(token, TokenType.Is)
             elif token.content == "as":
                 categorize(token, TokenType.As)
             elif token.content == "iter":
                 categorize(token, TokenType.Iter)
+            elif token.content == "ret":
+                categorize(token, TokenType.Return)
             elif token.content in PARENTHESES:
                 categorize(token, match_parentheses(token.content))
+            elif token.content in COMPARISON:
+                categorize(token, match_comparison(token.content))
             else:
                 categorize(token, TokenType.Ident)
         self.tokens = categorized_tokens
