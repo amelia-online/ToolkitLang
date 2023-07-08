@@ -1,0 +1,13 @@
+~start
+    iter 0..10 as i
+        set y 0
+        set x 0
+        iter if x < i
+            set y y + 1
+            set x x + 1
+        end
+        if y > 0
+            <: $"{}\n" y
+        end
+    end
+end
