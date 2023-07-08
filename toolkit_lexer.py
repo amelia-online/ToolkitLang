@@ -15,7 +15,7 @@ from enum import Enum
     GNU Affero General Public License for more details.
 """
 
-OPERATORS = {"+", "-", "*", "/", "%", "&", "|", ">>", "<<"}
+OPERATORS = {"+", "-", "*", "/", "%", "&", "|", ">>", "<<", "$"}
 COMPARISON = {"<", ">", "=", "<=", ">="}
 PARENTHESES = {"(", ")", "[", "]", "{", "}"}
 
@@ -57,6 +57,7 @@ class TokenType(Enum):
     ShiftR = 34,
     Is = 35,
     Return = 36,
+    Fmt = 37,
 
 
 def unreachable():
@@ -158,6 +159,9 @@ def match_operator(string):
         case "<<":
             return TokenType.ShiftL
 
+        case "$":
+            return TokenType.Fmt
+
         case _:
             unreachable()
 
@@ -249,6 +253,8 @@ class Lexer:
                 categorize(token, TokenType.Iter)
             elif token.content == "ret":
                 categorize(token, TokenType.Return)
+            elif token.content == "if":
+                categorize(token, TokenType.If)
             elif token.content in PARENTHESES:
                 categorize(token, match_parentheses(token.content))
             elif token.content in COMPARISON:
@@ -307,7 +313,8 @@ class Lexer:
                                     backslash = False
 
                             case _:
-                                pass
+                                if backslash:
+                                    backslash = False
 
                         current_token.content += char
                         continue

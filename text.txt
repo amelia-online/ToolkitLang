@@ -13,15 +13,20 @@
     GNU Affero General Public License for more details.
     *>
 
+~add: x y
+    ret x + y
+end
+
 ~start
     :> x int
     <: x
     <: "Hello, world!"
-
+    
     set list [1 2 3]
     iter list as i
         <: i + 1
     end
+    add 1 2
 end
 
 <* end of file *>
